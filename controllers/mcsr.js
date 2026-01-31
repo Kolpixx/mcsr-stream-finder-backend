@@ -1,8 +1,10 @@
+require("dotenv").config();
+
 const axios = require("axios");
 
 const getStreams = async (req, res) => {
     try {
-        axios.get("https://api.mcsrranked.com/live/")
+        axios.get(process.env.MCSR_API_URL)
             .then(response => {
                 const data = response.data;
                 const apiLiveMatches = data.data.liveMatches;
