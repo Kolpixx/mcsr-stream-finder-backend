@@ -13,6 +13,7 @@ const getStreams = async (req, res) => {
                 apiLiveMatches.forEach(element => {
                     const player = element.players[0];
                     const uuid = player.uuid;
+                    const twitchUsername = element.data[uuid].liveUrl.replace("https://twitch.tv/", "");
 
                     liveMatches.push({
                         uuid: uuid,
