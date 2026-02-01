@@ -20,12 +20,12 @@ const getAccessToken = async () => {
 const getMoreInfo = async (ids) => {
     let params = "";
     ids.forEach((id) => {
-        params += `broadcaster_id=${id}&`
+        params += `user_id=${id}&`
     });
 
     try {
         const response = await axios.get(
-            `${process.env.TWITCH_API_URL}/channels?${params}`,
+            `${process.env.TWITCH_API_URL}/streams?${params}`,
             {
                 headers: {
                     "Client-Id": process.env.TWITCH_CLIENT_ID,
@@ -41,9 +41,15 @@ const getMoreInfo = async (ids) => {
         const users = [];
 
         data.forEach((user) => {
-            users[user.broadcaster_login] = {
-                language: user.broadcaster_language,
-                tags: user.tags
+            const thumbnailURL = user.thumbnail_url.replace("{width}", process.env.WIDTH).replace("{height}", process.env.HEIGHT);
+
+            users[user.user_login] = {
+                twitch_name: user.user_login,
+                language: user.language,
+                tags: user.tags,
+                viewers: user.viewer_count,
+                startTimestamp: user.started_at,
+                thumbnail_url: thumbnailURL
             }
         });
 
@@ -87,11 +93,15 @@ const getUserInfo = async (names) => {
         data.forEach((user) => {
             users[user.login] = {
                 display_name: user.display_name,
+                twitch_name: user.login,
                 viewers: user.view_count,
                 viewers: user.view_count,
                 pfpURL: user.profile_image_url,
-                language: extraInfo[user.login].broadcaster_language,
-                tags: extraInfo[user.login].tags
+                language: extraInfo[user.login].language,
+                tags: extraInfo[user.login].tags,
+                viewers: extraInfo[user.login].viewers,
+                startTimestamp: extraInfo[user.login].startTimestamp,
+                thumbnail_url: extraInfo[user.login].thumbnail_url
             }
         });
 
