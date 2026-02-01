@@ -5,9 +5,9 @@ const app = express();
 const port = process.env.PORT;
 app.use(express.json());
 
-const { getStreams } = require("./controllers/mcsr");
+const { getMCSRStreams } = require("./controllers/mcsr");
 
-app.get("/getstreams", getStreams);
+app.get("/getstreams", getMCSRStreams);
 app.get("/", (req, res) => { res.status(200).send("Server running!"); });
 
 app.listen(port, () => {
