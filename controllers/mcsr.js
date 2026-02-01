@@ -6,6 +6,10 @@ const twitch = require("./twitch");
 const getMCSRStreams = async (req, res) => {
     try {
         const response = await axios.get(process.env.MCSR_API_URL);
+        if (response.status == 401) {
+            getAccessToken();
+        }
+        
         const data = response.data;
         const apiLiveMatches = data.data.liveMatches;
         const liveMatches = [];

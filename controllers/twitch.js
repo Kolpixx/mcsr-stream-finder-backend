@@ -17,7 +17,7 @@ const getAccessToken = async () => {
     }
 }
 
-const getMoreInfo = async (ids, accessToken) => {
+const getMoreInfo = async (ids) => {
     let params = "";
     ids.forEach((id) => {
         params += `broadcaster_id=${id}&`
@@ -69,6 +69,10 @@ const getUserInfo = async (names) => {
                 }
             }
         );
+        if (response.status == 401) {
+            getAccessToken();
+        }
+        
         const data = response.data.data;
 
         const ids = [];
