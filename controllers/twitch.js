@@ -97,7 +97,7 @@ const getUserInfo = async (names) => {
                 viewers: user.view_count,
                 viewers: user.view_count,
                 pfpURL: user.profile_image_url,
-                language: extraInfo[user.login].language,
+                language: extraInfo[user.login].language || undefined,
                 tags: extraInfo[user.login].tags,
                 viewers: extraInfo[user.login].viewers,
                 startTimestamp: extraInfo[user.login].startTimestamp,
