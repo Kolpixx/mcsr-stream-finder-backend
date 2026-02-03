@@ -45,7 +45,7 @@ const getMoreInfo = async (ids) => {
 
             users[user.user_login] = {
                 twitch_name: user.user_login,
-                language: user.language,
+                language: user.language || undefined,
                 tags: user.tags,
                 viewers: user.viewer_count,
                 startTimestamp: user.started_at,
@@ -55,7 +55,7 @@ const getMoreInfo = async (ids) => {
 
         return users;
     } catch (error) {
-        console.log(error.message);
+        console.log("Failed at getMoreInfo:", error.message);
     }
 }
 
@@ -97,7 +97,7 @@ const getUserInfo = async (names) => {
                 viewers: user.view_count,
                 viewers: user.view_count,
                 pfpURL: user.profile_image_url,
-                language: extraInfo[user.login].language || undefined,
+                language: extraInfo[user.login].language,
                 tags: extraInfo[user.login].tags,
                 viewers: extraInfo[user.login].viewers,
                 startTimestamp: extraInfo[user.login].startTimestamp,
@@ -107,7 +107,7 @@ const getUserInfo = async (names) => {
 
         return users;
     } catch (error) {
-        console.log(error.message);
+        console.log("Failed at getUserInfo:", error.message);
     }
 }
 
