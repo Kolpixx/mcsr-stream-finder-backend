@@ -44,15 +44,17 @@ const getMCSRStreams = async (req, res) => {
                 }
             })
 
-            liveMatches.push({
-                uuid: uuid,
-                nickname: player.nickname,
-                elo: player.eloRate,
-                division: playerDivision,
-                contry: player.country,
-                url: twitchURL,
-                twitch: twitchStats[twitchURL.replace("https://twitch.tv/", "")]
-            });
+            if (twitchStats[twitchURL.replace("https://twitch.tv/", "")] !== undefined) {
+                liveMatches.push({
+                    uuid: uuid,
+                    nickname: player.nickname,
+                    elo: player.eloRate,
+                    division: playerDivision,
+                    contry: player.country,
+                    url: twitchURL,
+                    twitch: twitchStats[twitchURL.replace("https://twitch.tv/", "")]
+                });
+            }
         });
         res.status(200).send(liveMatches);
     } catch (error) {
