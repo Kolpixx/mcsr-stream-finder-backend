@@ -5,7 +5,14 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT;
 app.use(express.json());
-app.use(cors());
+
+const allowedHosts = process.env.ALLOWED_HOSTS.split(",");
+const corsOptions = {
+    origin: [allowedHosts],
+    methods: "GET,POST"
+}
+
+app.use(cors(corsOptions));
 
 const { getMCSRStreams } = require("./controllers/mcsr");
 
