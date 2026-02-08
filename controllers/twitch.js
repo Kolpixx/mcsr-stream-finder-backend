@@ -91,23 +91,34 @@ const getUserInfo = async (names) => {
         const users = [];
 
         data.forEach((user) => {
-            users[user.login] = {
-                display_name: user.display_name,
-                twitch_name: user.login,
-                viewers: user.view_count,
-                viewers: user.view_count,
-                pfpURL: user.profile_image_url,
-                language: extraInfo[user.login].language,
-                tags: extraInfo[user.login].tags,
-                viewers: extraInfo[user.login].viewers,
-                startTimestamp: extraInfo[user.login].startTimestamp,
-                thumbnail_url: extraInfo[user.login].thumbnail_url
+            if (extraInfo[user.login] !== undefined) {
+                users[user.login] = {
+                    display_name: user.display_name,
+                    twitch_name: user.login,
+                    viewers: user.view_count,
+                    viewers: user.view_count,
+                    pfpURL: user.profile_image_url,
+                    language: extraInfo[user.login].language,
+                    tags: extraInfo[user.login].tags,
+                    viewers: extraInfo[user.login].viewers,
+                    startTimestamp: extraInfo[user.login].startTimestamp,
+                    thumbnail_url: extraInfo[user.login].thumbnail_url
+                }
+            } else {
+                users[user.login] = {
+                    display_name: user.display_name,
+                    twitch_name: user.login,
+                    viewers: user.view_count,
+                    viewers: user.view_count,
+                    pfpURL: user.profile_image_url
+                }
             }
         });
 
         return users;
     } catch (error) {
-        console.log("Failed at getUserInfo:", error.message);
+        console.error("Failed at getUserInfo:", error.message);
+        console.error(error);
     }
 }
 
