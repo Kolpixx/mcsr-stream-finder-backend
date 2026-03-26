@@ -70,7 +70,7 @@ const getMCSRStreams = async (req, res) => {
         });
         res.status(200).send(liveMatches);
     } catch (error) {
-        // console.error({ message: "Error retrieving streams", error: error });
+        console.error({ message: "Error retrieving streams", error: error });
         res.status(500).json({ message: "Error retrieving streams", error: error.message })
     }
 }

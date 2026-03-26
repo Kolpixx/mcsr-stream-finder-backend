@@ -118,7 +118,6 @@ const getUserInfo = async (names) => {
         return users;
     } catch (error) {
         console.error("Failed at getUserInfo:", error.message);
-        console.error(error);
     }
 }
 
