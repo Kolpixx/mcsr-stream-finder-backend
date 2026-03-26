@@ -22,42 +22,55 @@ const getMCSRStreams = async (req, res) => {
         const data = response.data;
         const apiLiveMatches = data.data.liveMatches;
         const liveMatches = [];
+        const streamers = [];
         const twitchUsernames = [];
 
-        apiLiveMatches.forEach(element => {
-            const player = element.players[0];
-            const uuid = player.uuid;
-            twitchUsernames.push(element.data[uuid].liveUrl.replace("https://twitch.tv/", ""));
+        apiLiveMatches.forEach(match => {
+            Object.keys(match.data).forEach((uuid) => {
+                if (match.data[uuid].liveUrl !== null) {
+                    const mcsrDataObject = match.players.find(user => user.uuid === uuid);
+
+                    streamers.push({
+                        uuid: uuid,
+                        twitchUrl: match.data[uuid].liveUrl,
+                        twitchName: match.data[uuid].liveUrl.replace("https://twitch.tv/", ""),
+                        nickname: mcsrDataObject.nickname,
+                        roleType: mcsrDataObject.roleType,
+                        eloRate: mcsrDataObject.eloRate,
+                        eloRank: mcsrDataObject.eloRank
+                    });
+
+                    twitchUsernames.push(match.data[uuid].liveUrl.replace("https://twitch.tv/", ""));
+                }
+            });
         });
 
         const twitchStats = await twitch.getUserInfo(twitchUsernames);
 
-        apiLiveMatches.forEach((element, index) => {
-            const player = element.players[0];
-            const uuid = player.uuid;
-            const twitchURL = element.data[uuid].liveUrl;
+        streamers.forEach((streamer) => {
             let playerDivision;
 
             Object.keys(divisionsMap).forEach((division) => {
-                if (player.eloRate > divisionsMap[division][0] && player.eloRate < divisionsMap[division][1]) {
+                if (streamer.eloRate > divisionsMap[division][0] && streamer.eloRate < divisionsMap[division][1]) {
                     playerDivision = division;
                 }
             })
 
-            if (twitchStats[twitchURL.replace("https://twitch.tv/", "")] !== undefined) {
+            if (twitchStats[streamer.twitchName] !== undefined) {
                 liveMatches.push({
-                    uuid: uuid,
-                    nickname: player.nickname,
-                    elo: player.eloRate,
+                    uuid: streamer.uuid,
+                    nickname: streamer.nickname,
+                    elo: streamer.eloRate,
                     division: playerDivision,
-                    contry: player.country,
-                    url: twitchURL,
-                    twitch: twitchStats[twitchURL.replace("https://twitch.tv/", "")]
+                    contry: streamer.country,
+                    url: streamer.twichUrl,
+                    twitch: twitchStats[streamer.twitchName]
                 });
             }
         });
         res.status(200).send(liveMatches);
     } catch (error) {
+        // console.error({ message: "Error retrieving streams", error: error });
         res.status(500).json({ message: "Error retrieving streams", error: error.message })
     }
 }
