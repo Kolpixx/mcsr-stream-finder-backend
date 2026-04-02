@@ -56,7 +56,7 @@ const getMCSRStreams = async (req, res) => {
                 }
             })
 
-            if (twitchStats[streamer.twitchName] !== undefined) {
+            if (twitchStats?.[streamer.twitchName] !== undefined) {
                 liveMatches.push({
                     uuid: streamer.uuid,
                     nickname: streamer.nickname,
