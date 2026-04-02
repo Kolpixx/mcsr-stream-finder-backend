@@ -14,7 +14,7 @@ const divisionsMap = {
 
 const getMCSRStreams = async (req, res) => {
     try {
-        const response = await axios.get(process.env.MCSR_API_URL);
+        const response = await axios.get(`${process.env.MCSR_API_URL}/live`);
         if (response.status == 401) {
             getAccessToken();
         }
@@ -71,8 +71,28 @@ const getMCSRStreams = async (req, res) => {
         res.status(200).send(liveMatches);
     } catch (error) {
         console.error({ message: "Error retrieving streams", error: error });
-        res.status(500).json({ message: "Error retrieving streams", error: error.message })
+        res.status(500).json({ message: "Error retrieving streams", error: error.message });
     }
 }
 
-module.exports = { getMCSRStreams };
+const getStats = async (user, res) => {
+    try {
+        const response = await axios.get(`${process.env.MCSR_API_URL}/users/${user}`);
+        const data = response.data.data;
+
+        const stats = {
+            personalBest: data.statistics.total.bestTime.ranked,
+            playTime: Math.floor(data.statistics.total.playtime.ranked / 1000),
+            leaderboard: data.eloRank,
+            matches: data.statistics.total.wins.ranked + data.statistics.total.loses.ranked,
+            wins: data.statistics.total.wins.ranked
+        }
+        
+        res.status(200).json(stats);
+    } catch (error) {
+        console.error({ message: "Error retrieving stats", error: error });
+        res.status(500).json({ message: "Error retrieving stats", error: error.message })
+    }
+}
+
+module.exports = { getMCSRStreams, getStats };

@@ -14,9 +14,17 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const { getMCSRStreams } = require("./controllers/mcsr");
+const { getMCSRStreams, getStats } = require("./controllers/mcsr");
 
 app.get("/getstreams", getMCSRStreams);
+app.get("/getStats", (req, res) => {
+    const user = req.query.user;
+    if (user) {
+        getStats(user, res);
+    } else {
+        res.status(422).send({"error": "Missing 'user' parameter"});
+    }
+})
 app.get("/", (req, res) => { res.status(200).send("Server running!"); });
 
 app.listen(port, () => {
