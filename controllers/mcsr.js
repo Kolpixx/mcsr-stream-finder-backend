@@ -81,7 +81,7 @@ const getStats = async (user, res) => {
         const data = response.data.data;
 
         const stats = {
-            personalBest: data.statistics.total.bestTime.ranked,
+            personalBest: Math.floor(data.statistics.total.bestTime.ranked / 1000),
             playTime: Math.floor(data.statistics.total.playtime.ranked / 1000),
             leaderboard: data.eloRank,
             matches: data.statistics.total.wins.ranked + data.statistics.total.loses.ranked,
